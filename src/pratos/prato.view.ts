@@ -1,12 +1,32 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Prato } from './prato.entity';
 
-export interface PratoView {
-  id: number;
-  nome: string;
-  descricao: string;
-  tag: string;
-  imagem: string | null;
-  restaurante: number;
+export class PratoView {
+  @ApiProperty({ description: 'ID do prato', example: 1 })
+  id!: number;
+
+  @ApiProperty({ description: 'Nome do prato', example: 'Lasanha à Bolonhesa' })
+  nome!: string;
+
+  @ApiProperty({
+    description: 'Descrição do prato',
+    example: 'Massa fresca com molho bolonhesa e queijo gratinado',
+  })
+  descricao!: string;
+
+  @ApiProperty({ description: 'Valor da tag', example: 'Italiana' })
+  tag!: string;
+
+  @ApiProperty({
+    description: 'URL absoluta da imagem do prato (ou null)',
+    example: 'http://localhost:8000/media/abc123.jpg',
+    nullable: true,
+    type: String,
+  })
+  imagem!: string | null;
+
+  @ApiProperty({ description: 'ID do restaurante dono do prato', example: 1 })
+  restaurante!: number;
 }
 
 /**

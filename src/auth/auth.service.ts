@@ -1,11 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
 
-export interface AccessToken {
-  access_token: string;
+export class AccessToken {
+  @ApiProperty({
+    description: 'JWT de acesso para usar como Bearer token em /api/v2',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  access_token!: string;
 }
 
 @Injectable()
