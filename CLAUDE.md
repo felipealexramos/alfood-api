@@ -64,6 +64,20 @@ the controller level. Login body uses Portuguese field names `{ usuario, senha }
   absolute URL `{APP_URL}/media/<file>` and the relation is flattened to the
   `restaurante` id. Always serialize dishes through this function.
 
+**API docs are Swagger/OpenAPI, set up in [src/main.ts](src/main.ts).** `SwaggerModule`
+serves interactive docs at `/docs` (spec JSON at `/docs-json`), with a Bearer scheme
+registered under the name `'jwt'`. Swagger can't introspect TS interfaces, so response
+envelopes are documented via dedicated *classes* annotated with `@ApiProperty`:
+[prato.view.ts](src/pratos/prato.view.ts) `PratoView` (was an interface),
+[restaurante-paginado.view.ts](src/restaurantes/restaurante-paginado.view.ts)
+(the DRF envelope), [tags-response.view.ts](src/tags/tags-response.view.ts)
+(`{ tags }` wrapper), and `AccessToken` in [auth.service.ts](src/auth/auth.service.ts).
+When you add or change an endpoint, annotate it: `@ApiTags`, `@ApiOperation`,
+`@ApiResponse`, `@ApiBearerAuth('jwt')` on guarded controllers, and
+`@ApiConsumes('multipart/form-data')` + `@ApiBody` for file uploads. Use `PartialType`
+from `@nestjs/swagger` (not `@nestjs/mapped-types`) in update DTOs so `@ApiProperty`
+metadata is inherited.
+
 **Image uploads.** Dish images use Multer disk storage configured in
 [pratos/upload.config.ts](src/pratos/upload.config.ts) (random UUID filename, 5MB
 limit, image MIME allowlist), saved to `./uploads`, and served statically at `/media`
@@ -77,3 +91,6 @@ their image files orphaned (known MVP limitation).
   — match existing naming, don't anglicize.
 - Module-per-feature under `src/<feature>/`: entity, service, DTOs (`class-validator`),
   controller(s), module. Global `ValidationPipe` runs with `whitelist` + `transform`.
+- `strictPropertyInitialization` is explicitly `false` in [tsconfig.json](tsconfig.json),
+  so entity/DTO/view classes declare properties without initializers or `!` — match that
+  style (don't add definite-assignment `!` to model classes).

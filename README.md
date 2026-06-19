@@ -10,6 +10,7 @@ CRUD API (`/api/v2`) for restaurants, dishes, and tags, with dish image uploads.
 - **TypeORM** + **PostgreSQL**
 - **Multer** for `multipart/form-data` image uploads, served statically at `/media`
 - **class-validator** / **class-transformer** for request validation
+- **@nestjs/swagger** for OpenAPI docs at `/docs`
 - **Docker Compose** for the local database
 
 ## Getting started
@@ -39,13 +40,18 @@ the app boots, so `npm run start:dev` alone is enough after the first setup.
 | `DB_USERNAME`    | `alfood`                 | DB user                                   |
 | `DB_PASSWORD`    | `alfood`                 | DB password                               |
 | `DB_DATABASE`    | `alfood`                 | DB name                                   |
-| `DB_SYNCHRONIZE` | `true`                   | Auto-sync schema from entities (dev only) |
+| `DB_SYNCHRONIZE` | `false`                  | Auto-sync schema from entities (leave off; schema is migration-managed) |
+| `DB_MIGRATIONS_RUN` | `true`                | Run pending migrations automatically on app boot |
 | `JWT_SECRET`     | —                        | Secret used to sign admin JWTs (required) |
 | `JWT_EXPIRES_IN` | `1d`                     | Token lifetime (`60s`, `15m`, `1d`, …)    |
 | `ADMIN_USERNAME` | —                        | Single admin user for `/api/v2`           |
 | `ADMIN_PASSWORD_HASH` | —                   | bcrypt hash of the admin password         |
 
 ## API
+
+Interactive **Swagger UI** is served at [`/docs`](http://localhost:8000/docs)
+(OpenAPI JSON at `/docs-json`). Use the **Authorize** button with a token from
+`POST /api/v2/auth/login` to call the protected `/api/v2` routes from the browser.
 
 All routes use Django-style trailing slashes (Express also matches without them).
 

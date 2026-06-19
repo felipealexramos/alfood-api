@@ -6,15 +6,10 @@ import { Paginacao } from '../common/paginacao.interface';
 import { serializePrato } from '../pratos/prato.view';
 import { CreateRestauranteDto } from './dto/create-restaurante.dto';
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto';
+import { RestauranteVitrine } from './restaurante-paginado.view';
 import { Restaurante } from './restaurante.entity';
 
 const DEFAULT_PAGE_SIZE = 10;
-
-interface RestauranteView {
-  id: number;
-  nome: string;
-  pratos: ReturnType<typeof serializePrato>[];
-}
 
 @Injectable()
 export class RestaurantesService {
@@ -56,7 +51,7 @@ export class RestaurantesService {
   }
 
   /** v1 public vitrine — paginated envelope with nested pratos. */
-  async paginate(page: number): Promise<Paginacao<RestauranteView>> {
+  async paginate(page: number): Promise<Paginacao<RestauranteVitrine>> {
     const currentPage = page > 0 ? page : 1;
     const [restaurantes, count] =
       await this.restaurantesRepository.findAndCount({
@@ -67,7 +62,7 @@ export class RestaurantesService {
       });
 
     const appUrl = this.config.get<string>('APP_URL', 'http://localhost:8000');
-    const results: RestauranteView[] = restaurantes.map((restaurante) => ({
+    const results: RestauranteVitrine[] = restaurantes.map((restaurante) => ({
       id: restaurante.id,
       nome: restaurante.nome,
       pratos: (restaurante.pratos ?? []).map((prato) =>
