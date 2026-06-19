@@ -18,11 +18,14 @@ CRUD API (`/api/v2`) for restaurants, dishes, and tags, with dish image uploads.
 cp .env.example .env        # adjust if needed
 docker compose up -d        # start PostgreSQL (host port 5433 by default)
 npm install
+npm run migration:run       # create schema + seed default tags
 npm run start:dev           # http://localhost:8000
 ```
 
-On first boot the default tags are seeded automatically. With `DB_SYNCHRONIZE=true`
-(dev default) the schema is created from the entities — no migrations needed yet.
+The schema is managed by **migrations** (not `synchronize`). The initial
+migration creates the tables and seeds the default tags. With
+`DB_MIGRATIONS_RUN=true` (default) pending migrations also run automatically when
+the app boots, so `npm run start:dev` alone is enough after the first setup.
 
 ## Configuration (`.env`)
 
@@ -103,9 +106,23 @@ npm run lint         # eslint --fix
 npm test             # jest unit tests
 ```
 
+### Migrations (TypeORM)
+
+The CLI uses a standalone DataSource at `src/data-source.ts` that reads the same
+`.env` as the app.
+
+```bash
+npm run migration:run                       # apply pending migrations
+npm run migration:revert                     # undo the last migration
+npm run migration:show                       # list applied/pending migrations
+npm run migration:generate -- src/migrations/<Name>   # diff entities → new migration
+```
+
+Default tags are seeded inside the initial migration, so a clean database plus
+`migration:run` reproduces the full schema and seed data.
+
 ## Known limitations (MVP)
 
 - Deleting a restaurant cascades its dishes at the database level, which leaves
   those dishes' image files orphaned on disk (deleting a dish directly does clean
   its file). Acceptable for the MVP dev backend.
-- Uses `synchronize` instead of migrations.

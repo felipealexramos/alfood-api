@@ -21,7 +21,13 @@ import { TagsModule } from './tags/tags.module';
         password: config.get<string>('DB_PASSWORD', 'alfood'),
         database: config.get<string>('DB_DATABASE', 'alfood'),
         autoLoadEntities: true,
+        // Schema is managed by migrations (npm run migration:run).
+        // Keep synchronize off by default; only enable it explicitly in dev.
         synchronize: config.get<string>('DB_SYNCHRONIZE', 'false') === 'true',
+        migrations: [join(__dirname, '/migrations/*{.ts,.js}')],
+        // Auto-run pending migrations on boot unless explicitly disabled.
+        migrationsRun:
+          config.get<string>('DB_MIGRATIONS_RUN', 'true') === 'true',
       }),
     }),
     // Serve uploaded dish images at /media/<filename>.
