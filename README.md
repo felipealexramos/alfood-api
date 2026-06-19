@@ -37,6 +37,10 @@ On first boot the default tags are seeded automatically. With `DB_SYNCHRONIZE=tr
 | `DB_PASSWORD`    | `alfood`                 | DB password                               |
 | `DB_DATABASE`    | `alfood`                 | DB name                                   |
 | `DB_SYNCHRONIZE` | `true`                   | Auto-sync schema from entities (dev only) |
+| `JWT_SECRET`     | —                        | Secret used to sign admin JWTs (required) |
+| `JWT_EXPIRES_IN` | `1d`                     | Token lifetime (`60s`, `15m`, `1d`, …)    |
+| `ADMIN_USERNAME` | —                        | Single admin user for `/api/v2`           |
+| `ADMIN_PASSWORD_HASH` | —                   | bcrypt hash of the admin password         |
 
 ## API
 
@@ -47,7 +51,31 @@ All routes use Django-style trailing slashes (Express also matches without them)
 - `GET /api/v1/restaurantes/?page=N` — paginated envelope
   `{ count, next, previous, results }`, each result with nested `pratos[]`.
 
-### Admin — `/api/v2`
+  This vitrine API stays **open** (no token required).
+
+### Authentication
+
+The admin API (`/api/v2`) is protected by JWT. There is a single admin user
+defined by `ADMIN_USERNAME` / `ADMIN_PASSWORD_HASH` (no users table, no
+registration). Generate the password hash once:
+
+```bash
+node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
+# paste the output into ADMIN_PASSWORD_HASH in .env
+```
+
+- `POST /api/v2/auth/login` — body `{ usuario, senha }` → `200 { access_token }`
+  (`401` on bad credentials). This endpoint is public.
+
+Send the token on every other `/api/v2` request:
+
+```
+Authorization: Bearer <access_token>
+```
+
+Requests to `/api/v2/*` without a valid token return `401`.
+
+### Admin — `/api/v2` (requires `Authorization: Bearer <token>`)
 
 - `GET    /api/v2/restaurantes/` — array
 - `GET    /api/v2/restaurantes/:id/`
@@ -80,5 +108,4 @@ npm test             # jest unit tests
 - Deleting a restaurant cascades its dishes at the database level, which leaves
   those dishes' image files orphaned on disk (deleting a dish directly does clean
   its file). Acceptable for the MVP dev backend.
-- No authentication on the admin API yet.
 - Uses `synchronize` instead of migrations.

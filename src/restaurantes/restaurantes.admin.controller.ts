@@ -8,12 +8,15 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateRestauranteDto } from './dto/create-restaurante.dto';
 import { UpdateRestauranteDto } from './dto/update-restaurante.dto';
 import { Restaurante } from './restaurante.entity';
 import { RestaurantesService } from './restaurantes.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v2/restaurantes')
 export class RestaurantesAdminController {
   constructor(private readonly restaurantesService: RestaurantesService) {}

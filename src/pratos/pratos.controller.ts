@@ -9,15 +9,18 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreatePratoDto } from './dto/create-prato.dto';
 import { UpdatePratoDto } from './dto/update-prato.dto';
 import { PratoView } from './prato.view';
 import { PratosService } from './pratos.service';
 import { pratoImageUpload } from './upload.config';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v2/pratos')
 export class PratosController {
   constructor(private readonly pratosService: PratosService) {}

@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { PratosModule } from './pratos/pratos.module';
 import { RestaurantesModule } from './restaurantes/restaurantes.module';
 import { TagsModule } from './tags/tags.module';
@@ -28,6 +29,7 @@ import { TagsModule } from './tags/tags.module';
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/media',
     }),
+    AuthModule,
     TagsModule,
     RestaurantesModule,
     PratosModule,
