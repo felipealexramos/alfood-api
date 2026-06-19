@@ -10,7 +10,7 @@ export class AccessToken {
     description: 'JWT de acesso para usar como Bearer token em /api/v2',
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
-  access_token!: string;
+  access_token: string;
 }
 
 @Injectable()

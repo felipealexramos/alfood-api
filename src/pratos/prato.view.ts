@@ -3,19 +3,19 @@ import { Prato } from './prato.entity';
 
 export class PratoView {
   @ApiProperty({ description: 'ID do prato', example: 1 })
-  id!: number;
+  id: number;
 
   @ApiProperty({ description: 'Nome do prato', example: 'Lasanha à Bolonhesa' })
-  nome!: string;
+  nome: string;
 
   @ApiProperty({
     description: 'Descrição do prato',
     example: 'Massa fresca com molho bolonhesa e queijo gratinado',
   })
-  descricao!: string;
+  descricao: string;
 
   @ApiProperty({ description: 'Valor da tag', example: 'Italiana' })
-  tag!: string;
+  tag: string;
 
   @ApiProperty({
     description: 'URL absoluta da imagem do prato (ou null)',
@@ -23,10 +23,10 @@ export class PratoView {
     nullable: true,
     type: String,
   })
-  imagem!: string | null;
+  imagem: string | null;
 
   @ApiProperty({ description: 'ID do restaurante dono do prato', example: 1 })
-  restaurante!: number;
+  restaurante: number;
 }
 
 /**

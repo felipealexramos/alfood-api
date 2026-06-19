@@ -4,7 +4,7 @@ import { Restaurante } from './restaurante.entity';
 /** DRF-style pagination envelope returned by the public vitrine endpoint. */
 export class RestaurantePaginado {
   @ApiProperty({ description: 'Total de restaurantes', example: 42 })
-  count!: number;
+  count: number;
 
   @ApiProperty({
     description: 'URL da próxima página (ou null)',
@@ -12,7 +12,7 @@ export class RestaurantePaginado {
     nullable: true,
     type: String,
   })
-  next!: string | null;
+  next: string | null;
 
   @ApiProperty({
     description: 'URL da página anterior (ou null)',
@@ -20,11 +20,11 @@ export class RestaurantePaginado {
     nullable: true,
     type: String,
   })
-  previous!: string | null;
+  previous: string | null;
 
   @ApiProperty({
     type: [Restaurante],
     description: 'Restaurantes desta página',
   })
-  results!: Restaurante[];
+  results: Restaurante[];
 }
